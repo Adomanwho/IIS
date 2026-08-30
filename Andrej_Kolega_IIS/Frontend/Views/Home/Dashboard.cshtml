@@ -1,0 +1,12 @@
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<h1 class="h3 mb-3">Dashboard</h1>
+
+<div class="card">
+    <div class="card-body">
+        <p>Logged in as <strong>@User.Identity?.Name</strong></p>
+        <p>Role: <strong>@(User.IsInRole("FullAccess") ? "Full access" : "Read only")</strong></p>
+    </div>
+</div>
