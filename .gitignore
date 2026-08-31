@@ -4,6 +4,7 @@ obj/
 .vs/
 *.user
 *.suo
+App_Data/
 
 ## OS
 .DS_Store

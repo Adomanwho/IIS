@@ -17,6 +17,8 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="JsonSchema.Net" Version="7.*" />
+    <PackageReference Include="SoapCore" Version="1.2.1.14" />
+    <PackageReference Include="System.ServiceModel.Http" Version="10.0.652802" />
   </ItemGroup>
 
   <ItemGroup>

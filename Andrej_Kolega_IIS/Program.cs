@@ -1,8 +1,10 @@
 using Andrej_Kolega_IIS.Backend.RestApi.Validation;
+using Andrej_Kolega_IIS.Backend.Soap;
 using Andrej_Kolega_IIS.Shared.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
+using SoapCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +18,17 @@ builder.Services.AddHttpClient("BackendApi", client =>
 
 builder.Services.AddSingleton<OrderXmlValidator>();
 builder.Services.AddSingleton<OrderJsonValidator>();
+
+builder.Services.AddHttpClient<FirebaseOrdersClient>(client =>
+{
+    var baseUrl = builder.Configuration["Firebase:BaseUrl"]
+        ?? "https://iis-firebase-default-rtdb.europe-west1.firebasedatabase.app/";
+    client.BaseAddress = new Uri(baseUrl);
+});
+
+builder.Services.AddScoped<OrdersXmlGenerator>();
+builder.Services.AddScoped<IOrdersSoapService, OrdersSoapService>();
+builder.Services.AddSoapCore();
 
 builder.Services.Configure<RazorViewEngineOptions>(options =>
 {
@@ -56,6 +69,8 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+((IApplicationBuilder)app).UseSoapEndpoint<IOrdersSoapService>("/soap/orders", new SoapEncoderOptions(), SoapSerializer.DataContractSerializer);
 
 app.MapStaticAssets();
 

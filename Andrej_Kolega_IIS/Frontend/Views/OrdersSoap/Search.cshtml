@@ -1,0 +1,89 @@
+@model OrdersSoapSearchViewModel
+@{
+    ViewData["Title"] = "Search Orders (SOAP)";
+}
+
+<h1 class="h3 mb-3">Search Orders (SOAP)</h1>
+<p class="text-muted">
+    Searches orders by customer name using a SOAP service that filters a backend-generated
+    <code>orders.xml</code> file with XPath. The file is re-validated against the order XSD on every call.
+</p>
+
+@if (TempData["GenerateMessage"] is string generateMessage)
+{
+    <div class="alert alert-info">@generateMessage</div>
+}
+
+@if (User.IsInRole("FullAccess"))
+{
+    <form asp-controller="OrdersSoap" asp-action="Generate" method="post" class="mb-4">
+        <button type="submit" class="btn btn-outline-secondary">Generate orders.xml from REST API</button>
+    </form>
+}
+
+<div class="card mb-4">
+    <div class="card-body">
+        <form asp-controller="OrdersSoap" asp-action="Search" method="post">
+            <div class="mb-3">
+                <label class="form-label">Customer name contains</label>
+                <input type="text" name="SearchTerm" value="@Model.SearchTerm" class="form-control" placeholder="e.g. ana" />
+            </div>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+    </div>
+</div>
+
+@if (Model.Result is not null)
+{
+    if (!Model.Result.ValidationPassed)
+    {
+        <div class="alert alert-danger">
+            <p class="mb-2"><strong>orders.xml failed schema validation:</strong></p>
+            <ul class="mb-0">
+                @foreach (var error in Model.Result.ValidationErrors)
+                {
+                    <li>@error</li>
+                }
+            </ul>
+        </div>
+    }
+    else if (Model.Result.Orders.Count == 0)
+    {
+        <div class="alert alert-secondary">No orders matched.</div>
+    }
+    else
+    {
+        <table class="table table-striped bg-white">
+            <thead>
+                <tr>
+                    <th>Customer</th>
+                    <th>Email</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>City</th>
+                    <th>Items</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var order in Model.Result.Orders)
+                {
+                    <tr>
+                        <td>@order.CustomerName</td>
+                        <td>@order.CustomerEmail</td>
+                        <td>@order.OrderDate</td>
+                        <td>@order.Status</td>
+                        <td>@order.ShippingCity</td>
+                        <td>
+                            <ul class="mb-0 ps-3">
+                                @foreach (var line in order.Items)
+                                {
+                                    <li>@line.ProductName x @line.Quantity (@line.UnitPrice.ToString("F2"))</li>
+                                }
+                            </ul>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}

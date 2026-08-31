@@ -13,10 +13,31 @@ namespace Andrej_Kolega_IIS.Backend.RestApi
                 {
                     CustomerName = o.CustomerName,
                     CustomerEmail = o.CustomerEmail,
-                    OrderDate = o.OrderDate,
+                    OrderDate = DateTime.Parse(o.OrderDate),
                     Status = o.Status,
                     ShippingCity = o.ShippingCity,
                     Items = o.Items.Select(i => new OrderItemImportDto
+                    {
+                        ProductName = i.ProductName,
+                        Quantity = i.Quantity,
+                        UnitPrice = i.UnitPrice
+                    }).ToList()
+                }).ToList()
+            };
+        }
+
+        public static OrdersXmlDto ToXmlDto(List<OrderImportDto> orders)
+        {
+            return new OrdersXmlDto
+            {
+                Orders = orders.Select(o => new OrderXmlDto
+                {
+                    CustomerName = o.CustomerName,
+                    CustomerEmail = o.CustomerEmail,
+                    OrderDate = o.OrderDate.ToString("yyyy-MM-dd"),
+                    Status = o.Status,
+                    ShippingCity = o.ShippingCity,
+                    Items = o.Items.Select(i => new OrderItemXmlDto
                     {
                         ProductName = i.ProductName,
                         Quantity = i.Quantity,
