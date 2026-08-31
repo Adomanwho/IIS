@@ -1,5 +1,4 @@
 using Andrej_Kolega_IIS.Frontend.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -12,13 +11,7 @@ namespace Andrej_Kolega_IIS.Frontend.Controllers
             return View();
         }
 
-        [Authorize]
-        public IActionResult Dashboard()
-        {
-            return View();
-        }
-
-        public IActionResult Privacy()
+        public IActionResult About()
         {
             return View();
         }

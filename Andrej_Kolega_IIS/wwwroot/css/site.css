@@ -29,3 +29,54 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+:root {
+  --app-navy: #2f4157;
+  --app-navy-dark: #263646;
+  --app-slate: #64748b;
+  --app-bg: #eef1f5;
+}
+
+body {
+  background-color: var(--app-bg);
+}
+
+.app-navbar {
+  background-color: var(--app-navy);
+}
+
+.app-navbar .navbar-brand,
+.app-navbar .nav-link,
+.app-navbar .btn-link.nav-link {
+  color: #f1f4f8;
+}
+
+.app-navbar .nav-link:hover,
+.app-navbar .btn-link.nav-link:hover {
+  color: #ffffff;
+}
+
+.app-navbar .navbar-user {
+  color: #c7d0da;
+}
+
+.hero {
+  background-color: var(--app-navy-dark);
+  color: #f1f4f8;
+  padding: 1.5rem 1.75rem;
+  border-radius: 0.5rem;
+}
+
+.feature-card {
+  border: 1px solid #dbe1e8;
+  transition: box-shadow 0.15s ease-in-out, transform 0.15s ease-in-out;
+}
+
+.feature-card:hover {
+  box-shadow: 0 0.5rem 1rem rgba(47, 65, 87, 0.12);
+  transform: translateY(-2px);
+}
+
+.footer {
+  color: var(--app-slate);
+}

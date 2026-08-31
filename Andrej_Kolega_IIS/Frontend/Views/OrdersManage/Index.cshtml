@@ -30,44 +30,46 @@
         <a asp-controller="OrdersManage" asp-action="Create" class="btn btn-primary mb-3">Create order</a>
     }
 
-    <table class="table table-striped bg-white">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Customer</th>
-                <th>Status</th>
-                <th>City</th>
-                <th>Date</th>
-                <th>Items</th>
-                @if (User.IsInRole("FullAccess"))
-                {
-                    <th></th>
-                }
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var order in Model.CustomOrders ?? new())
-            {
+    <div class="table-responsive">
+        <table class="table table-striped bg-white">
+            <thead>
                 <tr>
-                    <td>@order.Id</td>
-                    <td>@order.CustomerName</td>
-                    <td>@order.Status</td>
-                    <td>@order.ShippingCity</td>
-                    <td>@order.OrderDate.ToString("yyyy-MM-dd")</td>
-                    <td>@order.Items.Count</td>
+                    <th>Id</th>
+                    <th>Customer</th>
+                    <th>Status</th>
+                    <th>City</th>
+                    <th>Date</th>
+                    <th>Items</th>
                     @if (User.IsInRole("FullAccess"))
                     {
-                        <td class="text-end">
-                            <a asp-controller="OrdersManage" asp-action="Edit" asp-route-id="@order.Id" class="btn btn-sm btn-outline-secondary">Edit</a>
-                            <form asp-controller="OrdersManage" asp-action="DeleteViaGraphQl" asp-route-id="@order.Id" method="post" class="d-inline">
-                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Deletes via a GraphQL mutation">Delete (GraphQL)</button>
-                            </form>
-                        </td>
+                        <th></th>
                     }
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var order in Model.CustomOrders ?? new())
+                {
+                    <tr>
+                        <td>@order.Id</td>
+                        <td>@order.CustomerName</td>
+                        <td>@order.Status</td>
+                        <td>@order.ShippingCity</td>
+                        <td>@order.OrderDate.ToString("yyyy-MM-dd")</td>
+                        <td>@order.Items.Count</td>
+                        @if (User.IsInRole("FullAccess"))
+                        {
+                            <td class="text-end text-nowrap">
+                                <a asp-controller="OrdersManage" asp-action="Edit" asp-route-id="@order.Id" class="btn btn-sm btn-outline-secondary">Edit</a>
+                                <form asp-controller="OrdersManage" asp-action="DeleteViaGraphQl" asp-route-id="@order.Id" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Deletes via a GraphQL mutation">Delete (GraphQL)</button>
+                                </form>
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 }
 else
 {
@@ -76,27 +78,29 @@ else
         to browse and manage the SQL-backed orders (create/edit via REST, delete via GraphQL).
     </p>
 
-    <table class="table table-striped bg-white">
-        <thead>
-            <tr>
-                <th>Customer</th>
-                <th>Status</th>
-                <th>City</th>
-                <th>Date</th>
-                <th>Items</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var order in Model.PublicOrders ?? new())
-            {
+    <div class="table-responsive">
+        <table class="table table-striped bg-white">
+            <thead>
                 <tr>
-                    <td>@order.CustomerName</td>
-                    <td>@order.Status</td>
-                    <td>@order.ShippingCity</td>
-                    <td>@order.OrderDate.ToString("yyyy-MM-dd")</td>
-                    <td>@order.Items.Count</td>
+                    <th>Customer</th>
+                    <th>Status</th>
+                    <th>City</th>
+                    <th>Date</th>
+                    <th>Items</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var order in Model.PublicOrders ?? new())
+                {
+                    <tr>
+                        <td>@order.CustomerName</td>
+                        <td>@order.Status</td>
+                        <td>@order.ShippingCity</td>
+                        <td>@order.OrderDate.ToString("yyyy-MM-dd")</td>
+                        <td>@order.Items.Count</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 }

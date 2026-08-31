@@ -34,22 +34,24 @@
     }
     else
     {
-        <table class="table table-striped bg-white">
-            <thead>
-                <tr>
-                    <th>City</th>
-                    <th>Temperature (&deg;C)</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var result in Model.Results)
-                {
+        <div class="table-responsive">
+            <table class="table table-striped bg-white">
+                <thead>
                     <tr>
-                        <td>@result.CityName</td>
-                        <td>@result.TemperatureCelsius.ToString("F1")</td>
+                        <th>City</th>
+                        <th>Temperature (&deg;C)</th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var result in Model.Results)
+                    {
+                        <tr>
+                            <td>@result.CityName</td>
+                            <td>@result.TemperatureCelsius.ToString("F1")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     }
 }

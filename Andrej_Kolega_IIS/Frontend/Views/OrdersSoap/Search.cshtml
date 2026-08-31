@@ -53,37 +53,39 @@
     }
     else
     {
-        <table class="table table-striped bg-white">
-            <thead>
-                <tr>
-                    <th>Customer</th>
-                    <th>Email</th>
-                    <th>Date</th>
-                    <th>Status</th>
-                    <th>City</th>
-                    <th>Items</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var order in Model.Result.Orders)
-                {
+        <div class="table-responsive">
+            <table class="table table-striped bg-white">
+                <thead>
                     <tr>
-                        <td>@order.CustomerName</td>
-                        <td>@order.CustomerEmail</td>
-                        <td>@order.OrderDate</td>
-                        <td>@order.Status</td>
-                        <td>@order.ShippingCity</td>
-                        <td>
-                            <ul class="mb-0 ps-3">
-                                @foreach (var line in order.Items)
-                                {
-                                    <li>@line.ProductName x @line.Quantity (@line.UnitPrice.ToString("F2"))</li>
-                                }
-                            </ul>
-                        </td>
+                        <th>Customer</th>
+                        <th>Email</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>City</th>
+                        <th>Items</th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var order in Model.Result.Orders)
+                    {
+                        <tr>
+                            <td>@order.CustomerName</td>
+                            <td>@order.CustomerEmail</td>
+                            <td>@order.OrderDate</td>
+                            <td>@order.Status</td>
+                            <td>@order.ShippingCity</td>
+                            <td>
+                                <ul class="mb-0 ps-3">
+                                    @foreach (var line in order.Items)
+                                    {
+                                        <li>@line.ProductName x @line.Quantity (@line.UnitPrice.ToString("F2"))</li>
+                                    }
+                                </ul>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     }
 }

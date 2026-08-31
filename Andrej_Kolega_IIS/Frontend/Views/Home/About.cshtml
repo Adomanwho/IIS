@@ -1,0 +1,66 @@
+@{
+    ViewData["Title"] = "About";
+}
+
+<h1 class="h3 mb-3">About this project</h1>
+<p class="text-muted">
+    Interoperability project for the Information System Interoperability course. Each feature below
+    maps to one of the assignment's numbered requirements.
+</p>
+
+<div class="table-responsive">
+    <table class="table table-striped bg-white">
+        <thead>
+            <tr>
+                <th>Point</th>
+                <th>Feature</th>
+                <th>Technology</th>
+                <th>Page</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>Upload orders as XML or JSON, validated against an XSD / JSON Schema before saving</td>
+                <td>ASP.NET Core Web API, <code>System.Xml.Schema</code>, JsonSchema.Net</td>
+                <td>Import Orders</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>SOAP service that generates <code>orders.xml</code> from the public REST API and filters it by customer name with XPath</td>
+                <td>SoapCore, <code>System.Xml.XPath</code></td>
+                <td>Search Orders</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Re-validates the generated XML against the same XSD on every search, returning validation messages instead of stale results if it fails</td>
+                <td><code>System.Xml.Schema</code></td>
+                <td>Search Orders</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>Looks up current temperature by city name (or part of it) from DHMZ</td>
+                <td>gRPC (Grpc.AspNetCore / Grpc.Net.Client)</td>
+                <td>Weather</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>Custom REST (GET/POST/PUT/DELETE) and GraphQL over the SQL-backed orders, secured with JWT access/refresh tokens, with a config switch between the public and custom REST API</td>
+                <td>ASP.NET Core Web API, HotChocolate GraphQL, JWT bearer auth, EF Core / SQL Server</td>
+                <td>Manage Orders</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>Two-role client (read-only vs full access) covering all of the above</td>
+                <td>ASP.NET Core MVC, cookie authentication</td>
+                <td>Whole application</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<h2 class="h5 mt-4">Demo accounts</h2>
+<ul>
+    <li><code>readonly</code> / <code>readonly123</code> &mdash; can view every page, cannot create, edit, delete, import, or generate anything.</li>
+    <li><code>fulladmin</code> / <code>fulladmin123</code> &mdash; unrestricted access.</li>
+</ul>

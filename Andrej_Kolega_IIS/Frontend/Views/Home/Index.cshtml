@@ -1,8 +1,72 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@{
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="hero mb-4">
+    <h1 class="h2 mb-2">Andrej Kolega &ndash; IIS Project</h1>
+    <p class="mb-0">
+        A demo client for a REST + SOAP + gRPC + GraphQL backend built around a single domain: customer orders.
+    </p>
 </div>
+
+@if (User.Identity?.IsAuthenticated == true)
+{
+    <p class="mb-4">
+        Signed in as <strong>@User.Identity!.Name</strong>
+        (<span class="badge @(User.IsInRole("FullAccess") ? "bg-primary" : "bg-secondary")">@(User.IsInRole("FullAccess") ? "Full access" : "Read only")</span>).
+    </p>
+
+    <div class="row g-3">
+        @if (User.IsInRole("FullAccess"))
+        {
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 feature-card">
+                    <div class="card-body">
+                        <span class="badge bg-secondary mb-2">Point 1</span>
+                        <h2 class="h5 card-title">Import Orders</h2>
+                        <p class="card-text">Upload an XML or JSON file of orders, validated against an XSD / JSON Schema.</p>
+                        <a asp-controller="Orders" asp-action="Import" class="btn btn-outline-primary btn-sm">Open</a>
+                    </div>
+                </div>
+            </div>
+        }
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 feature-card">
+                <div class="card-body">
+                    <span class="badge bg-secondary mb-2">Points 2 &amp; 3</span>
+                    <h2 class="h5 card-title">Search Orders</h2>
+                    <p class="card-text">SOAP search by customer name over an XSD-validated, XPath-filtered order list.</p>
+                    <a asp-controller="OrdersSoap" asp-action="Search" class="btn btn-outline-primary btn-sm">Open</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 feature-card">
+                <div class="card-body">
+                    <span class="badge bg-secondary mb-2">Point 4</span>
+                    <h2 class="h5 card-title">Weather</h2>
+                    <p class="card-text">Current temperature by Croatian city name via a gRPC call to DHMZ data.</p>
+                    <a asp-controller="Weather" asp-action="Search" class="btn btn-outline-primary btn-sm">Open</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 feature-card">
+                <div class="card-body">
+                    <span class="badge bg-secondary mb-2">Point 5</span>
+                    <h2 class="h5 card-title">Manage Orders</h2>
+                    <p class="card-text">Custom REST + GraphQL over SQL Server with JWT auth, switchable to the public REST API.</p>
+                    <a asp-controller="OrdersManage" asp-action="Index" class="btn btn-outline-primary btn-sm">Open</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <p>
+        Log in with one of the demo accounts to use the app &mdash; see the
+        <a asp-controller="Home" asp-action="About">About</a> page for details and credentials.
+    </p>
+    <a asp-controller="Account" asp-action="Login" class="btn btn-primary">Login</a>
+}
