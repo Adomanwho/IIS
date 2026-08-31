@@ -7,6 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Grpc.AspNetCore" Version="2.83.0" />
+    <PackageReference Include="Grpc.Net.Client" Version="2.83.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.11">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
@@ -24,6 +26,10 @@
   <ItemGroup>
     <Content Update="Shared\Schemas\**\*" CopyToOutputDirectory="PreserveNewest" />
     <None Include="Shared\Schemas\*.xsd" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Protobuf Include="Backend\Grpc\Protos\weather.proto" GrpcServices="Both" />
   </ItemGroup>
 
 </Project>

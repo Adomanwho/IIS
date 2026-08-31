@@ -1,0 +1,55 @@
+@model WeatherSearchViewModel
+@{
+    ViewData["Title"] = "Weather Search";
+}
+
+<h1 class="h3 mb-3">Weather Search</h1>
+<p class="text-muted">
+    Looks up the current temperature for a Croatian city (or part of its name) via a gRPC call to the
+    backend, which reads live data from <a href="https://vrijeme.hr/hrvatska_n.xml" target="_blank" rel="noopener">DHMZ</a>.
+</p>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <form asp-controller="Weather" asp-action="Search" method="post">
+            <div class="mb-3">
+                <label class="form-label">City name (or part of it)</label>
+                <input type="text" name="CityQuery" value="@Model.CityQuery" class="form-control" placeholder="e.g. Split" />
+            </div>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+    </div>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert alert-danger">@Model.ErrorMessage</div>
+}
+
+@if (Model.Results is not null)
+{
+    if (Model.Results.Count == 0)
+    {
+        <div class="alert alert-secondary">No cities matched.</div>
+    }
+    else
+    {
+        <table class="table table-striped bg-white">
+            <thead>
+                <tr>
+                    <th>City</th>
+                    <th>Temperature (&deg;C)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var result in Model.Results)
+                {
+                    <tr>
+                        <td>@result.CityName</td>
+                        <td>@result.TemperatureCelsius.ToString("F1")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}
