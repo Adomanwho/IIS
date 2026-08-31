@@ -1,3 +1,4 @@
+using Andrej_Kolega_IIS.Backend.RestApi.Validation;
 using Andrej_Kolega_IIS.Shared.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc.Razor;
@@ -6,6 +7,15 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddHttpClient("BackendApi", client =>
+{
+    var baseUrl = builder.Configuration["BackendApi:BaseUrl"] ?? "http://localhost:5183";
+    client.BaseAddress = new Uri(baseUrl);
+});
+
+builder.Services.AddSingleton<OrderXmlValidator>();
+builder.Services.AddSingleton<OrderJsonValidator>();
 
 builder.Services.Configure<RazorViewEngineOptions>(options =>
 {
@@ -21,7 +31,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     .AddCookie(options =>
     {
         options.LoginPath = "/Account/Login";
-        options.AccessDeniedPath = "/Account/Login";
+        options.AccessDeniedPath = "/Account/AccessDenied";
     });
 
 builder.Services.AddAuthorization();

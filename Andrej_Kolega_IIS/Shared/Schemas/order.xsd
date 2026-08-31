@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
+  <xs:element name="Orders" type="OrdersType" />
+
+  <xs:complexType name="OrdersType">
+    <xs:sequence>
+      <xs:element name="Order" type="OrderType" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="OrderType">
+    <xs:sequence>
+      <xs:element name="CustomerName" type="NonEmptyString" />
+      <xs:element name="CustomerEmail" type="EmailString" />
+      <xs:element name="OrderDate" type="xs:date" />
+      <xs:element name="Status" type="OrderStatusType" />
+      <xs:element name="ShippingCity" type="NonEmptyString" />
+      <xs:element name="Items" type="ItemsType" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ItemsType">
+    <xs:sequence>
+      <xs:element name="Item" type="ItemType" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ItemType">
+    <xs:sequence>
+      <xs:element name="ProductName" type="NonEmptyString" />
+      <xs:element name="Quantity" type="PositiveQuantity" />
+      <xs:element name="UnitPrice" type="NonNegativeDecimal" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="NonEmptyString">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1" />
+      <xs:maxLength value="200" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="EmailString">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[^@\s]+@[^@\s]+\.[^@\s]+" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="OrderStatusType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Pending" />
+      <xs:enumeration value="Shipped" />
+      <xs:enumeration value="Delivered" />
+      <xs:enumeration value="Cancelled" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="PositiveQuantity">
+    <xs:restriction base="xs:int">
+      <xs:minInclusive value="1" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="NonNegativeDecimal">
+    <xs:restriction base="xs:decimal">
+      <xs:minInclusive value="0" />
+    </xs:restriction>
+  </xs:simpleType>
+
+</xs:schema>
