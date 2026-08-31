@@ -12,6 +12,7 @@ namespace Andrej_Kolega_IIS.Shared.Data
         public DbSet<Order> Orders => Set<Order>();
         public DbSet<OrderItem> OrderItems => Set<OrderItem>();
         public DbSet<User> Users => Set<User>();
+        public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -40,6 +41,17 @@ namespace Andrej_Kolega_IIS.Shared.Data
                 entity.Property(u => u.Username).IsRequired().HasMaxLength(100);
                 entity.Property(u => u.PasswordHash).IsRequired();
                 entity.Property(u => u.Role).HasConversion<string>().HasMaxLength(20);
+            });
+
+            modelBuilder.Entity<RefreshToken>(entity =>
+            {
+                entity.HasIndex(t => t.TokenHash).IsUnique();
+                entity.Property(t => t.TokenHash).IsRequired().HasMaxLength(200);
+
+                entity.HasOne(t => t.User)
+                    .WithMany()
+                    .HasForeignKey(t => t.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
         }
     }

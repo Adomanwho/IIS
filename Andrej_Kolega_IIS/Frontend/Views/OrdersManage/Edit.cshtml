@@ -1,0 +1,15 @@
+@model OrderFormViewModel
+@{
+    ViewData["Title"] = "Edit Order";
+}
+
+<h1 class="h3 mb-3">Edit Order #@Model.Id</h1>
+<p class="text-muted">Updates the order via the custom REST API (<code>PUT /api/custom/orders/@Model.Id</code>).</p>
+
+<form asp-controller="OrdersManage" asp-action="Edit" asp-route-id="@Model.Id" method="post">
+    <partial name="_Form" />
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

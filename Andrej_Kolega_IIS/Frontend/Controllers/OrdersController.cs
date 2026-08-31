@@ -32,7 +32,7 @@ namespace Andrej_Kolega_IIS.Frontend.Controllers
                 return View(model);
             }
 
-            var extension = Path.GetExtension(model.File.FileName).ToLowerInvariant();
+            var extension = System.IO.Path.GetExtension(model.File.FileName).ToLowerInvariant();
             var endpoint = extension switch
             {
                 ".xml" => "api/rest/orders/xml",

@@ -38,6 +38,9 @@
                         @if (User.Identity?.IsAuthenticated == true)
                         {
                             <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="OrdersManage" asp-action="Index">Manage Orders</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="OrdersSoap" asp-action="Search">Search Orders</a>
                             </li>
                             <li class="nav-item">

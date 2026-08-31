@@ -1,11 +1,16 @@
+using System.Text;
+using Andrej_Kolega_IIS.Backend.CustomApi.GraphQL;
+using Andrej_Kolega_IIS.Backend.CustomApi.Jwt;
 using Andrej_Kolega_IIS.Backend.Grpc;
 using Andrej_Kolega_IIS.Backend.RestApi.Validation;
 using Andrej_Kolega_IIS.Backend.Soap;
 using Andrej_Kolega_IIS.Shared.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using SoapCore;
 
 // Required for the frontend's gRPC client to call the backend over plain HTTP (no TLS) in dev.
@@ -67,14 +72,49 @@ builder.Services.Configure<RazorViewEngineOptions>(options =>
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
+builder.Services.AddScoped<JwtTokenService>();
+
+builder.Services.AddHttpContextAccessor();
+builder.Services
+    .AddGraphQLServer()
+    .AddQueryType<OrdersQuery>()
+    .AddMutationType<OrdersMutation>();
+
+var jwtSettings = builder.Configuration.GetSection("Jwt").Get<JwtSettings>()!;
+
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
         options.LoginPath = "/Account/Login";
         options.AccessDeniedPath = "/Account/AccessDenied";
+    })
+    .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = jwtSettings.Issuer,
+            ValidateAudience = true,
+            ValidAudience = jwtSettings.Audience,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key)),
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.FromSeconds(30)
+        };
     });
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("GraphQLAuth", policy =>
+    {
+        policy.AuthenticationSchemes.Add(JwtBearerDefaults.AuthenticationScheme);
+        policy.RequireAuthenticatedUser();
+    });
+});
+
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession();
 
 var app = builder.Build();
 
@@ -93,6 +133,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseRouting();
+app.UseSession();
 
 app.UseAuthentication();
 app.UseAuthorization();
@@ -100,6 +141,8 @@ app.UseAuthorization();
 ((IApplicationBuilder)app).UseSoapEndpoint<IOrdersSoapService>("/soap/orders", new SoapEncoderOptions(), SoapSerializer.DataContractSerializer);
 
 app.MapGrpcService<WeatherGrpcService>();
+
+app.MapGraphQL().RequireAuthorization("GraphQLAuth");
 
 app.MapStaticAssets();
 

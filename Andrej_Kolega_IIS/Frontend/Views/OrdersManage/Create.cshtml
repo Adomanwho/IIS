@@ -1,0 +1,15 @@
+@model OrderFormViewModel
+@{
+    ViewData["Title"] = "Create Order";
+}
+
+<h1 class="h3 mb-3">Create Order</h1>
+<p class="text-muted">Creates the order via the custom REST API (<code>POST /api/custom/orders</code>).</p>
+
+<form asp-controller="OrdersManage" asp-action="Create" method="post">
+    <partial name="_Form" />
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

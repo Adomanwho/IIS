@@ -11,7 +11,7 @@ namespace Andrej_Kolega_IIS.Backend.Soap
         public OrdersXmlGenerator(FirebaseOrdersClient firebaseClient, IWebHostEnvironment env)
         {
             _firebaseClient = firebaseClient;
-            _xmlPath = Path.Combine(env.ContentRootPath, "App_Data", "orders.xml");
+            _xmlPath = System.IO.Path.Combine(env.ContentRootPath, "App_Data", "orders.xml");
         }
 
         public string XmlPath => _xmlPath;
@@ -21,7 +21,7 @@ namespace Andrej_Kolega_IIS.Backend.Soap
             var orders = await _firebaseClient.FetchOrdersAsync();
             var xmlDto = OrderImportMapper.ToXmlDto(orders);
 
-            var directory = Path.GetDirectoryName(_xmlPath)!;
+            var directory = System.IO.Path.GetDirectoryName(_xmlPath)!;
             Directory.CreateDirectory(directory);
 
             var serializer = new XmlSerializer(xmlDto.GetType());

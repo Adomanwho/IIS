@@ -9,7 +9,7 @@ namespace Andrej_Kolega_IIS.Backend.RestApi.Validation
 
         public OrderXmlValidator(IWebHostEnvironment env)
         {
-            _xsdPath = Path.Combine(env.ContentRootPath, "Shared", "Schemas", "order.xsd");
+            _xsdPath = System.IO.Path.Combine(env.ContentRootPath, "Shared", "Schemas", "order.xsd");
         }
 
         public List<string> Validate(Stream xmlStream)

@@ -9,7 +9,7 @@ namespace Andrej_Kolega_IIS.Backend.RestApi.Validation
 
         public OrderJsonValidator(IWebHostEnvironment env)
         {
-            var path = Path.Combine(env.ContentRootPath, "Shared", "Schemas", "order.schema.json");
+            var path = System.IO.Path.Combine(env.ContentRootPath, "Shared", "Schemas", "order.schema.json");
             _schema = JsonSchema.FromText(File.ReadAllText(path));
         }
 

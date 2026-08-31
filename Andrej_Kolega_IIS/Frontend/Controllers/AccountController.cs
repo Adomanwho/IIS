@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using Andrej_Kolega_IIS.Backend.CustomApi.Jwt;
 using Andrej_Kolega_IIS.Frontend.Models;
 using Andrej_Kolega_IIS.Shared.Data;
 using Microsoft.AspNetCore.Authentication;
@@ -11,10 +12,12 @@ namespace Andrej_Kolega_IIS.Frontend.Controllers
     public class AccountController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly JwtTokenService _tokenService;
 
-        public AccountController(AppDbContext context)
+        public AccountController(AppDbContext context, JwtTokenService tokenService)
         {
             _context = context;
+            _tokenService = tokenService;
         }
 
         [HttpGet]
@@ -54,6 +57,11 @@ namespace Andrej_Kolega_IIS.Frontend.Controllers
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));
 
+            var tokens = await _tokenService.IssueTokensAsync(user);
+            HttpContext.Session.SetString(SessionKeys.AccessToken, tokens.AccessToken);
+            HttpContext.Session.SetString(SessionKeys.RefreshToken, tokens.RefreshToken);
+            HttpContext.Session.SetString(SessionKeys.AccessTokenExpiresAtUtc, tokens.AccessTokenExpiresAtUtc.ToString("o"));
+
             if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
             {
                 return Redirect(returnUrl);
@@ -67,6 +75,7 @@ namespace Andrej_Kolega_IIS.Frontend.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            HttpContext.Session.Clear();
             return RedirectToAction("Index", "Home");
         }
 
