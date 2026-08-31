@@ -14,8 +14,6 @@ namespace Andrej_Kolega_IIS.Backend.RestApi.Dto
         public string CustomerName { get; set; } = string.Empty;
         public string CustomerEmail { get; set; } = string.Empty;
 
-        // xs:date is a plain "yyyy-MM-dd" string; XmlSerializer would otherwise emit
-        // DateTime as xs:dateTime (with a time component), which fails XSD validation.
         public string OrderDate { get; set; } = string.Empty;
 
         public string Status { get; set; } = string.Empty;
